@@ -20,6 +20,9 @@ export default function Footer({
               <p>
                 담임목사 {churchInfo.pastor} · {churchInfo.pastor_phone}
               </p>
+              {churchInfo.email && !churchInfo.email.startsWith("[") && (
+                <p>{churchInfo.email}</p>
+              )}
               <p className="text-ink-faint">{churchInfo.denomination}</p>
             </div>
           </div>

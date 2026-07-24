@@ -49,31 +49,35 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-spring-100 via-spring-50 to-white">
-        <div className="mx-auto max-w-6xl px-4 py-20 text-center md:py-28">
-          <p className="text-sm font-semibold tracking-widest text-spring-600">
-            {churchInfo.denomination} · Since 2013
+      {/* Hero — full-bleed photo */}
+      <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden md:min-h-[80vh]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hero-desert.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-spring-950/50 via-spring-950/30 to-spring-950/60" />
+        <div className="relative mx-auto max-w-6xl px-4 py-24 text-center text-white">
+          <p className="text-sm font-semibold tracking-widest text-spring-100/90">
+            {churchInfo.denomination} · 아부다비 맑은샘 한인교회
           </p>
-          <h1 className="mt-4 text-4xl font-black leading-tight tracking-tight text-spring-950 md:text-5xl">
-            아부다비 맑은샘 한인교회
+          <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight drop-shadow-lg md:text-6xl">
+            {churchInfo.hero_headline || "광야의 샘을 내는 교회"}
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-ink-soft">
-            2026년 &lsquo;{churchInfo.motto_2026}&rsquo;
+          <p className="mx-auto mt-5 max-w-2xl text-lg text-white/90 drop-shadow md:text-xl">
+            {churchInfo.hero_welcome || "아부다비 맑은샘교회에 오신 여러분을 환영합니다."}
           </p>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-ink-faint">
-            {churchInfo.motto_verse}
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-9 flex flex-wrap justify-center gap-3">
             <Link
               href="/about/newcomer"
-              className="rounded-full bg-spring-600 px-6 py-3 font-semibold text-white shadow-lg shadow-spring-600/25 transition-transform hover:scale-105"
+              className="rounded-full bg-white px-6 py-3 font-semibold text-spring-800 shadow-lg transition-transform hover:scale-105"
             >
               처음 오셨나요?
             </Link>
             <Link
               href="/about/worship"
-              className="rounded-full border border-spring-200 bg-white px-6 py-3 font-semibold text-spring-700 transition-colors hover:bg-spring-50"
+              className="rounded-full border border-white/60 bg-white/10 px-6 py-3 font-semibold text-white backdrop-blur transition-colors hover:bg-white/20"
             >
               예배 안내
             </Link>
@@ -81,8 +85,22 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Intro */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+          <p className="text-sm font-semibold tracking-widest text-spring-500">
+            2026년 &lsquo;{churchInfo.motto_2026}&rsquo;
+          </p>
+          <p className="mt-5 text-2xl font-bold leading-snug text-spring-950 md:text-[28px]">
+            {churchInfo.intro ||
+              "사막의 오아시스처럼 지친 영혼에게 쉼과 생명을 공급하는 맑은샘교회입니다."}
+          </p>
+          <p className="mt-4 text-sm text-ink-faint">{churchInfo.motto_verse}</p>
+        </div>
+      </section>
+
       {/* Worship times */}
-      <section className="mx-auto max-w-6xl px-4 py-14">
+      <section className="mx-auto max-w-6xl px-4 pb-14">
         <h2 className="text-center text-2xl font-bold text-spring-950">예배 시간</h2>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {worshipTimes.map((w) => (

@@ -14,6 +14,10 @@ export type ChurchInfo = {
   email: string;
   motto_2026: string;
   motto_verse: string;
+  hero_headline: string;
+  hero_welcome: string;
+  intro: string;
+  contacts: { role: string; name: string; phone: string }[];
 };
 
 export type WorshipTime = {
