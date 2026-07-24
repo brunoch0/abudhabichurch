@@ -53,11 +53,11 @@ export default async function HomePage() {
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden md:min-h-[80vh]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/hero-desert.jpg"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
+          src="/hero-standrews.jpg"
+          alt="아부다비 St.Andrew's Centre 전경"
+          className="hero-kenburns absolute inset-0 h-full w-full object-cover object-[center_12%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-spring-950/50 via-spring-950/30 to-spring-950/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-spring-950/55 via-spring-950/35 to-spring-950/65" />
         <div className="relative mx-auto max-w-6xl px-4 py-24 text-center text-white">
           <p className="text-sm font-semibold tracking-widest text-spring-100/90">
             {churchInfo.denomination} · 아부다비 맑은샘 한인교회

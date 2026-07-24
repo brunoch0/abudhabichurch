@@ -27,6 +27,27 @@ html {
   scroll-behavior: smooth;
 }
 
+/* slow Ken Burns drift for the home hero photo */
+@keyframes hero-zoom {
+  from {
+    transform: scale(1.02) translate(0, 0);
+  }
+  to {
+    transform: scale(1.14) translate(-1.5%, -1.5%);
+  }
+}
+
+.hero-kenburns {
+  animation: hero-zoom 35s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-kenburns {
+    animation: none;
+  }
+}
+
 body {
   background: var(--color-paper);
   color: var(--color-ink);
