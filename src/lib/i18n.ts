@@ -28,7 +28,7 @@ export const dict = {
       welcomeTag: "기독교대한감리회 · 아부다비 맑은샘 한인교회",
       newcomerBtn: "처음 오셨나요?",
       worshipBtn: "예배 안내",
-      latestSermon: "예배 Live",
+      latestSermon: "예배영상",
       weeklyBulletin: "금주의 주보",
       pastBulletins: "지난 주보 →",
       news: "공지사항",
