@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import { createClient } from "@/lib/supabase/server";
+import { getLang } from "@/lib/i18n-server";
 import { formatDate, SERMON_CATEGORIES } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default async function SermonsPage({
   searchParams: Promise<{ category?: string; q?: string }>;
 }) {
   const { category, q } = await searchParams;
+  const { lang, t } = await getLang();
   const supabase = await createClient();
 
   let query = supabase
@@ -37,7 +39,7 @@ export default async function SermonsPage({
 
   return (
     <div>
-      <PageHero title="설교 영상" subtitle="말씀으로 한 주를 살아갑니다" />
+      <PageHero title={t.pages.sermonsTitle} subtitle={t.pages.sermonsSub} />
 
       <section className="mx-auto max-w-6xl px-4 py-10">
         {/* category tabs */}
@@ -49,7 +51,7 @@ export default async function SermonsPage({
                 !category ? "bg-spring-600 text-white" : "bg-spring-50 text-ink-soft hover:bg-spring-100"
               }`}
             >
-              전체
+              {t.pages.all}
             </Link>
             {Object.entries(SERMON_CATEGORIES).map(([key, label]) => (
               <Link
@@ -71,14 +73,14 @@ export default async function SermonsPage({
               type="search"
               name="q"
               defaultValue={q ?? ""}
-              placeholder="제목·설교자 검색"
+              placeholder={t.pages.searchPlaceholder}
               className="w-44 rounded-full border border-spring-200 bg-white px-4 py-2 text-sm outline-none focus:border-spring-400"
             />
             <button
               type="submit"
               className="rounded-full bg-spring-600 px-4 py-2 text-sm font-semibold text-white"
             >
-              검색
+              {t.pages.search}
             </button>
           </form>
         </div>
@@ -114,7 +116,7 @@ export default async function SermonsPage({
             ))
           ) : (
             <p className="col-span-full py-16 text-center text-ink-faint">
-              {q ? "검색 결과가 없습니다" : "등록된 설교 영상이 없습니다"}
+              {q ? t.pages.noResult : t.common.empty}
             </p>
           )}
         </div>

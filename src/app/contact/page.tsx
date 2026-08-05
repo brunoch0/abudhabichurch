@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import { getSettings } from "@/lib/settings";
+import { getLang } from "@/lib/i18n-server";
 import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
@@ -12,10 +13,11 @@ export const revalidate = 300;
 
 export default async function ContactPage() {
   const { churchInfo, snsLinks } = await getSettings();
+  const { t } = await getLang();
 
   return (
     <div>
-      <PageHero title="문의" subtitle="궁금한 점은 무엇이든 편하게 남겨주세요" />
+      <PageHero title={t.pages.contactTitle} subtitle={t.pages.contactSub} />
 
       <section className="mx-auto max-w-4xl px-4 py-10">
         <div className="grid gap-8 md:grid-cols-5">
@@ -25,7 +27,7 @@ export default async function ContactPage() {
 
           <div className="space-y-4 md:col-span-2">
             <div className="rounded-2xl border border-spring-100 bg-white p-6 shadow-sm">
-              <p className="font-bold text-ink">📞 직접 연락</p>
+              <p className="font-bold text-ink">{t.contact.direct}</p>
               <p className="mt-2 text-sm text-ink-soft">
                 담임목사 {churchInfo.pastor}
                 <br />
@@ -44,7 +46,7 @@ export default async function ContactPage() {
               </a>
             </div>
             <div className="rounded-2xl border border-spring-100 bg-white p-6 shadow-sm">
-              <p className="font-bold text-ink">🕐 예배 안내</p>
+              <p className="font-bold text-ink">{t.contact.worshipInfo}</p>
               <p className="mt-2 text-sm text-ink-soft">
                 주일예배 오전 10:20
                 <br />
@@ -53,7 +55,7 @@ export default async function ContactPage() {
             </div>
             {(snsLinks.kakao || snsLinks.whatsapp) && (
               <div className="rounded-2xl border border-spring-100 bg-white p-6 shadow-sm">
-                <p className="font-bold text-ink">💬 메신저</p>
+                <p className="font-bold text-ink">{t.contact.messenger}</p>
                 <div className="mt-3 flex gap-2">
                   {snsLinks.kakao && (
                     <a

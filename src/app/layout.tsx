@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FloatingContact from "@/components/layout/FloatingContact";
 import { getSettings } from "@/lib/settings";
+import { getLang } from "@/lib/i18n-server";
 
 const notoSansKr = Noto_Sans_KR({
   variable: "--font-noto-sans-kr",
@@ -28,13 +29,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { churchInfo, snsLinks } = await getSettings();
+  const { t } = await getLang();
 
   return (
     <html lang="ko" className={`${notoSansKr.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <Header />
         <main className="flex-1">{children}</main>
-        <Footer churchInfo={churchInfo} snsLinks={snsLinks} />
+        <Footer churchInfo={churchInfo} snsLinks={snsLinks} adminLabel={t.common.adminLogin} />
         <FloatingContact />
       </body>
     </html>

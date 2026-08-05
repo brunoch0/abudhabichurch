@@ -4,9 +4,11 @@ import type { ChurchInfo, SnsLinks } from "@/lib/settings";
 export default function Footer({
   churchInfo,
   snsLinks,
+  adminLabel = "관리자 로그인",
 }: {
   churchInfo: ChurchInfo;
   snsLinks: SnsLinks;
+  adminLabel?: string;
 }) {
   return (
     <footer className="border-t border-spring-100 bg-mist">
@@ -58,7 +60,7 @@ export default function Footer({
               )}
             </div>
             <Link href="/admin/login" className="text-xs text-ink-faint hover:text-ink-soft">
-              관리자 로그인
+              {adminLabel}
             </Link>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import { createClient } from "@/lib/supabase/server";
+import { getLang } from "@/lib/i18n-server";
 import MonthCalendar from "./MonthCalendar";
 import { formatDateTime } from "@/lib/format";
 
@@ -33,6 +34,7 @@ export default async function CalendarPage({
   const monthStart = new Date(Date.UTC(year, month - 1, 1) - 4 * 3600 * 1000);
   const monthEnd = new Date(Date.UTC(year, month, 1) - 4 * 3600 * 1000);
 
+  const { t } = await getLang();
   const supabase = await createClient();
   const [{ data: monthEvents }, { data: upcoming }] = await Promise.all([
     supabase
@@ -53,7 +55,7 @@ export default async function CalendarPage({
 
   return (
     <div>
-      <PageHero title="교회 일정" subtitle="맑은샘 교회의 한 달을 확인하세요" />
+      <PageHero title={t.pages.calendarTitle} subtitle={t.pages.calendarSub} />
 
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="grid gap-8 lg:grid-cols-3">
@@ -62,7 +64,7 @@ export default async function CalendarPage({
           </div>
 
           <div>
-            <h2 className="text-lg font-bold text-spring-950">다가오는 일정</h2>
+            <h2 className="text-lg font-bold text-spring-950">{t.pages.calendarTitle}</h2>
             <div className="mt-4 space-y-3">
               {upcoming && upcoming.length > 0 ? (
                 upcoming.map((e) => (

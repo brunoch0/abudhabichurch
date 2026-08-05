@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import { createClient } from "@/lib/supabase/server";
+import { getLang } from "@/lib/i18n-server";
 import { formatDate } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 export default async function BulletinsPage() {
+  const { t } = await getLang();
   const supabase = await createClient();
   const { data: bulletins } = await supabase
     .from("bulletins")
@@ -24,7 +26,7 @@ export default async function BulletinsPage() {
 
   return (
     <div>
-      <PageHero title="주보" subtitle="이번 주 교회 소식을 확인하세요" />
+      <PageHero title={t.pages.bulletinsTitle} subtitle={t.pages.bulletinsSub} />
 
       <section className="mx-auto max-w-4xl px-4 py-10">
         {latest ? (
@@ -55,7 +57,7 @@ export default async function BulletinsPage() {
             </div>
           </Link>
         ) : (
-          <p className="py-16 text-center text-ink-faint">등록된 주보가 없습니다</p>
+          <p className="py-16 text-center text-ink-faint">{t.common.empty}</p>
         )}
 
         {rest.length > 0 && (

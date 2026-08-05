@@ -1,43 +1,63 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { dict, pickLang, type Lang } from "@/lib/i18n";
 
-const NAV = [
-  {
-    label: "교회소개",
-    href: "/about",
-    children: [
-      { label: "인사말·비전", href: "/about" },
-      { label: "섬기는 사람들", href: "/about/people" },
-      { label: "예배 안내", href: "/about/worship" },
-      { label: "오시는 길", href: "/about/location" },
-      { label: "새가족 안내", href: "/about/newcomer" },
-    ],
-  },
-  {
-    label: "예배와 말씀",
-    href: "/sermons",
-    children: [
-      { label: "설교 영상", href: "/sermons" },
-      { label: "주보", href: "/bulletins" },
-    ],
-  },
-  {
-    label: "교회소식",
-    href: "/news",
-    children: [
-      { label: "공지사항", href: "/news" },
-      { label: "교회 일정", href: "/calendar" },
-    ],
-  },
-  { label: "문의", href: "/contact", children: [] },
-];
+function readLang(): Lang {
+  if (typeof document === "undefined") return "ko";
+  return pickLang(document.cookie.match(/(?:^|; )lang=([^;]*)/)?.[1]);
+}
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [lang, setLang] = useState<Lang>("ko");
+
+  useEffect(() => {
+    setLang(readLang());
+  }, []);
+
+  const t = dict[lang];
+
+  const NAV = [
+    {
+      label: t.nav.about,
+      href: "/about",
+      children: [
+        { label: t.nav.aboutGreeting, href: "/about" },
+        { label: t.nav.aboutPeople, href: "/about/people" },
+        { label: t.nav.aboutWorship, href: "/about/worship" },
+        { label: t.nav.aboutLocation, href: "/about/location" },
+        { label: t.nav.aboutNewcomer, href: "/about/newcomer" },
+      ],
+    },
+    {
+      label: t.nav.worship,
+      href: "/sermons",
+      children: [{ label: t.nav.sermons, href: "/sermons" }],
+    },
+    {
+      label: t.nav.news_group,
+      href: "/news",
+      children: [
+        { label: t.nav.news, href: "/news" },
+        { label: t.nav.bulletins, href: "/bulletins" },
+        { label: t.nav.calendar, href: "/calendar" },
+      ],
+    },
+    { label: t.nav.contact, href: "/contact", children: [] },
+  ];
+
+  function toggleLang() {
+    const next = lang === "ko" ? "en" : "ko";
+    document.cookie = `lang=${next}; path=/; max-age=31536000`;
+    setLang(next);
+    setOpen(false);
+    router.refresh();
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-spring-100 bg-white/90 backdrop-blur">
@@ -85,12 +105,13 @@ export default function Header() {
               )}
             </div>
           ))}
-          <Link
-            href="/en"
+          <button
+            type="button"
+            onClick={toggleLang}
             className="ml-2 rounded-full border border-spring-200 px-3 py-1 text-xs font-semibold text-spring-700 transition-colors hover:bg-spring-50"
           >
-            EN
-          </Link>
+            {lang === "ko" ? "EN" : "한국어"}
+          </button>
         </nav>
 
         {/* mobile toggle */}
@@ -134,13 +155,13 @@ export default function Header() {
               ))}
             </div>
           ))}
-          <Link
-            href="/en"
+          <button
+            type="button"
+            onClick={toggleLang}
             className="mt-3 inline-block rounded-full border border-spring-200 px-4 py-1.5 text-sm font-semibold text-spring-700"
-            onClick={() => setOpen(false)}
           >
-            English
-          </Link>
+            {lang === "ko" ? "English" : "한국어"}
+          </button>
         </nav>
       )}
     </header>
