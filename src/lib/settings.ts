@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import type { TextStyle } from "@/lib/textstyle";
 
 export type ChurchInfo = {
   name_ko: string;
@@ -18,6 +19,11 @@ export type ChurchInfo = {
   hero_welcome: string;
   intro: string;
   contacts: { role: string; name: string; phone: string }[];
+  hero_headline_style?: TextStyle;
+  hero_welcome_style?: TextStyle;
+  intro_style?: TextStyle;
+  motto_2026_style?: TextStyle;
+  motto_verse_style?: TextStyle;
 };
 
 export type WorshipTime = {

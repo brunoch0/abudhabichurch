@@ -23,9 +23,9 @@ const CATEGORY_LABELS: Record<string, string> = {
 export default async function CalendarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ ym?: string }>;
+  searchParams: Promise<{ ym?: string; sel?: string }>;
 }) {
-  const { ym } = await searchParams;
+  const { ym, sel } = await searchParams;
   const now = new Date();
   const [year, month] = ym?.match(/^\d{4}-\d{2}$/)
     ? ym.split("-").map(Number)
@@ -41,8 +41,8 @@ export default async function CalendarPage({
       .from("calendar_events")
       .select("*")
       .eq("is_published", true)
-      .gte("starts_at", monthStart.toISOString())
       .lt("starts_at", monthEnd.toISOString())
+      .or(`starts_at.gte.${monthStart.toISOString()},ends_at.gte.${monthStart.toISOString()}`)
       .order("starts_at", { ascending: true }),
     supabase
       .from("calendar_events")
@@ -53,6 +53,8 @@ export default async function CalendarPage({
       .limit(10),
   ]);
 
+  const selected = sel ? (monthEvents ?? []).find((e) => e.id === sel) : undefined;
+
   return (
     <div>
       <PageHero title={t.pages.calendarTitle} subtitle={t.pages.calendarSub} />
@@ -60,10 +62,31 @@ export default async function CalendarPage({
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <MonthCalendar year={year} month={month} events={monthEvents ?? []} />
+            <MonthCalendar year={year} month={month} events={monthEvents ?? []} selId={sel} />
           </div>
 
           <div>
+            {selected && (
+              <div className="mb-6 rounded-2xl border-2 border-spring-400 bg-white p-5 shadow-md">
+                <div className="flex items-start justify-between gap-2">
+                  <span className="rounded-full bg-spring-600 px-2.5 py-0.5 text-[11px] font-bold text-white">
+                    {CATEGORY_LABELS[selected.category] ?? selected.category}
+                  </span>
+                  <a href={`/calendar?ym=${year}-${String(month).padStart(2, "0")}`} className="text-xs text-ink-faint hover:text-ink">
+                    닫기 ✕
+                  </a>
+                </div>
+                <p className="mt-2 text-lg font-bold text-ink">{selected.title}</p>
+                <p className="mt-1 text-sm text-ink-soft">
+                  🕐 {formatDateTime(selected.starts_at)}
+                  {selected.ends_at && ` ~ ${formatDateTime(selected.ends_at)}`}
+                </p>
+                {selected.location && <p className="mt-1 text-sm text-ink-soft">📍 {selected.location}</p>}
+                {selected.description && (
+                  <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-ink-soft">{selected.description}</p>
+                )}
+              </div>
+            )}
             <h2 className="text-lg font-bold text-spring-950">{t.pages.calendarTitle}</h2>
             <div className="mt-4 space-y-3">
               {upcoming && upcoming.length > 0 ? (

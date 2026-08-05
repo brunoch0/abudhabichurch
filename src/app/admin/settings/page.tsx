@@ -3,9 +3,19 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Field, inputCls, btnCls, btnGhostCls, revalidateSite } from "@/components/admin/ui";
+import StyleControls from "@/components/admin/StyleControls";
+import { textStyleToCss, type TextStyle } from "@/lib/textstyle";
 import type { WorshipTime } from "@/lib/settings";
 
 type ChurchInfo = Record<string, unknown> & { contacts?: { role: string; name: string; phone: string }[] };
+
+const HOME_TEXT_FIELDS: { key: string; label: string; rows: number; base: TextStyle; dark: boolean }[] = [
+  { key: "hero_headline", label: "메인 헤드라인", rows: 1, base: { color: "#ffffff", size: 48, weight: "bold", align: "center" }, dark: true },
+  { key: "hero_welcome", label: "환영 문구", rows: 1, base: { color: "#ffffff", size: 20, align: "center" }, dark: true },
+  { key: "intro", label: "교회 소개 한 줄", rows: 2, base: { color: "#182c50", size: 26, weight: "bold", align: "center" }, dark: false },
+  { key: "motto_2026", label: "연도 표어", rows: 1, base: { color: "#4096ec", size: 14, weight: "bold", align: "center" }, dark: false },
+  { key: "motto_verse", label: "표어 성경구절", rows: 1, base: { color: "#8b96a5", size: 14, align: "center" }, dark: false },
+];
 
 export default function AdminSettings() {
   const [church, setChurch] = useState<ChurchInfo>({});
@@ -57,12 +67,23 @@ export default function AdminSettings() {
     <div className="max-w-3xl space-y-6">
       <div className="rounded-2xl border border-spring-100 bg-white p-5">
         <h2 className="text-sm font-bold text-ink">홈 화면 문구</h2>
-        <div className="mt-3 space-y-3">
-          {text("hero_headline", "메인 헤드라인")}
-          {text("hero_welcome", "환영 문구")}
-          {text("intro", "교회 소개 한 줄", 2)}
-          {text("motto_2026", "연도 표어")}
-          {text("motto_verse", "표어 성경구절")}
+        <p className="mt-1 text-xs text-ink-faint">각 문구 아래에서 글씨체·크기·색상 등을 조절하면 미리보기에 바로 반영됩니다.</p>
+        <div className="mt-3 space-y-5">
+          {HOME_TEXT_FIELDS.map((f) => (
+            <div key={f.key}>
+              {text(f.key, f.label, f.rows)}
+              <StyleControls
+                base={f.base}
+                style={(church[`${f.key}_style`] as TextStyle) ?? {}}
+                onChange={(st) => setChurch({ ...church, [`${f.key}_style`]: st })}
+              />
+              <div className={`mt-2 rounded-xl p-4 ${f.dark ? "bg-spring-950" : "bg-mist"}`}>
+                <p style={textStyleToCss({ ...f.base, ...((church[`${f.key}_style`] as TextStyle) ?? {}) })}>
+                  {String(church[f.key] ?? "") || "(문구를 입력하세요)"}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getSettings } from "@/lib/settings";
 import { getLang } from "@/lib/i18n-server";
+import { textStyleToCss } from "@/lib/textstyle";
 
 export const revalidate = 300;
 
@@ -64,10 +65,16 @@ export default async function HomePage() {
           <p className="text-sm font-semibold tracking-widest text-spring-100/90">
             {t.home.welcomeTag}
           </p>
-          <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight drop-shadow-lg md:text-6xl">
+          <h1
+            className="mt-5 text-4xl font-black leading-tight tracking-tight drop-shadow-lg md:text-6xl"
+            style={churchInfo.hero_headline_style ? textStyleToCss({ color: "#ffffff", weight: "bold", align: "center", size: 48, ...churchInfo.hero_headline_style }) : undefined}
+          >
             {lang === "en" ? "A Church that Springs Forth in the Wilderness" : churchInfo.hero_headline || "광야의 샘을 내는 교회"}
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-white/90 drop-shadow md:text-xl">
+          <p
+            className="mx-auto mt-5 max-w-2xl text-lg text-white/90 drop-shadow md:text-xl"
+            style={churchInfo.hero_welcome_style ? textStyleToCss({ color: "#ffffff", align: "center", size: 20, ...churchInfo.hero_welcome_style }) : undefined}
+          >
             {lang === "en" ? "Welcome to Malgeunsaem Korean Church in Abu Dhabi." : churchInfo.hero_welcome || "아부다비 맑은샘교회에 오신 여러분을 환영합니다."}
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3">
@@ -130,16 +137,27 @@ export default async function HomePage() {
               </a>
             )}
           </div>
-          <p className="text-sm font-semibold tracking-widest text-spring-500">
+          <p
+            className="text-sm font-semibold tracking-widest text-spring-500"
+            style={churchInfo.motto_2026_style ? textStyleToCss({ color: "#4096ec", weight: "bold", align: "center", size: 14, ...churchInfo.motto_2026_style }) : undefined}
+          >
             {lang === "en" ? "2026 Motto" : <>2026년 &lsquo;{churchInfo.motto_2026}&rsquo;</>}
           </p>
-          <p className="mt-5 text-2xl font-bold leading-snug text-spring-950 md:text-[28px]">
+          <p
+            className="mt-5 text-2xl font-bold leading-snug text-spring-950 md:text-[28px]"
+            style={churchInfo.intro_style ? textStyleToCss({ color: "#182c50", weight: "bold", align: "center", size: 26, ...churchInfo.intro_style }) : undefined}
+          >
             {lang === "en"
               ? "Like an oasis in the desert, we bring rest and life to weary souls."
               : churchInfo.intro ||
                 "사막의 오아시스처럼 지친 영혼에게 쉼과 생명을 공급하는 맑은샘교회입니다."}
           </p>
-          <p className="mt-4 text-sm text-ink-faint">{churchInfo.motto_verse}</p>
+          <p
+            className="mt-4 text-sm text-ink-faint"
+            style={churchInfo.motto_verse_style ? textStyleToCss({ color: "#8b96a5", align: "center", size: 14, ...churchInfo.motto_verse_style }) : undefined}
+          >
+            {churchInfo.motto_verse}
+          </p>
         </div>
       </section>
 
