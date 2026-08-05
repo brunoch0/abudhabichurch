@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import { getSettings } from "@/lib/settings";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "섬기는 사람들",
@@ -9,37 +10,49 @@ export const metadata: Metadata = {
 
 export const revalidate = 300;
 
+type Member = { role: string; name: string; phone?: string; photo_url?: string };
+
 export default async function PeoplePage() {
   const { churchInfo } = await getSettings();
+  const supabase = await createClient();
+  const { data: page } = await supabase
+    .from("pages")
+    .select("content")
+    .eq("slug", "people")
+    .maybeSingle();
+
+  const members: Member[] =
+    (page?.content as { members?: Member[] })?.members?.filter((m) => m.name) ??
+    [{ role: "담임목사", name: churchInfo.pastor, phone: churchInfo.pastor_phone }];
 
   return (
     <div>
       <PageHero title="섬기는 사람들" subtitle="맑은샘 공동체를 함께 섬깁니다" />
 
       <section className="mx-auto max-w-4xl px-4 py-14">
-        <div className="mx-auto grid max-w-2xl gap-4 sm:grid-cols-2">
-          {(churchInfo.contacts ?? [
-            { role: "담임목사", name: churchInfo.pastor, phone: churchInfo.pastor_phone },
-          ]).map((c) => (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {members.map((m, i) => (
             <div
-              key={c.name}
+              key={`${m.name}-${i}`}
               className="rounded-2xl border border-spring-100 bg-white p-8 text-center shadow-sm"
             >
-              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-spring-100 text-3xl">
-                {c.role === "담임목사" ? "✝️" : "🌸"}
-              </div>
-              <p className="mt-4 text-sm font-semibold text-spring-600">{c.role}</p>
-              <p className="mt-1 text-xl font-bold text-ink">{c.name}</p>
-              <p className="mt-3 text-sm text-ink-soft">{c.phone}</p>
+              {m.photo_url ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={m.photo_url}
+                  alt={`${m.role} ${m.name}`}
+                  className="mx-auto h-24 w-24 rounded-full object-cover"
+                />
+              ) : (
+                <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-spring-100 text-4xl">
+                  {m.role.includes("목사") ? "✝️" : "🌿"}
+                </div>
+              )}
+              <p className="mt-4 text-sm font-semibold text-spring-600">{m.role}</p>
+              <p className="mt-1 text-xl font-bold text-ink">{m.name}</p>
+              {m.phone && <p className="mt-3 text-sm text-ink-soft">{m.phone}</p>}
             </div>
           ))}
-        </div>
-
-        <div className="mt-8 rounded-2xl border border-dashed border-spring-200 bg-spring-50/50 p-8 text-center">
-          <p className="text-ink-soft">장로 · 권사 · 집사 등 섬기는 분들 소개가 준비 중입니다.</p>
-          <p className="mt-1 text-sm text-ink-faint">
-            교회에서 명단과 사진을 제공해주시면 관리자 페이지에서 등록할 수 있습니다.
-          </p>
         </div>
       </section>
     </div>

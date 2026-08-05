@@ -14,6 +14,7 @@ const MENU = [
   { href: "/admin/news", label: "공지" },
   { href: "/admin/calendar", label: "일정" },
   { href: "/admin/banners", label: "배너" },
+  { href: "/admin/people", label: "섬기는 분들" },
   { href: "/admin/pages", label: "페이지 문구" },
   { href: "/admin/settings", label: "사이트 설정" },
   { href: "/admin/account", label: "내 계정" },
