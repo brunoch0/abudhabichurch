@@ -31,6 +31,10 @@ function StyleControls({
         <select className={`${inputCls} mt-1`} value={s.font} onChange={(e) => onChange({ ...s, font: e.target.value as TextStyle["font"] })}>
           <option value="sans">고딕 (기본)</option>
           <option value="serif">명조</option>
+          <option value="gowun">고운돋움 (부드러운 고딕)</option>
+          <option value="batang">고운바탕 (부드러운 명조)</option>
+          <option value="jua">주아 (둥근 제목체)</option>
+          <option value="pen">나눔손글씨 (펜글씨)</option>
         </select>
       </label>
       <label className="block text-[11px] font-semibold text-ink-soft">

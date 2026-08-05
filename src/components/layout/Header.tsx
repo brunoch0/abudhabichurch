@@ -63,9 +63,12 @@ export default function Header() {
     <header className="sticky top-0 z-40 border-b border-spring-100 bg-white/90 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-spring-600 text-lg font-bold text-white">
-            샘
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-malgeunsaem.png"
+            alt="맑은샘교회 로고"
+            className="h-10 w-11 rounded-lg bg-black object-contain"
+          />
           <span className="leading-tight">
             <span className="block text-[15px] font-bold tracking-tight">
               아부다비 맑은샘 한인교회

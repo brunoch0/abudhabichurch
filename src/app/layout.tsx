@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR, Noto_Serif_KR } from "next/font/google";
+import { Noto_Sans_KR, Noto_Serif_KR, Gowun_Dodum, Gowun_Batang, Jua, Nanum_Pen_Script } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -18,6 +18,11 @@ const notoSerifKr = Noto_Serif_KR({
   subsets: ["latin"],
   weight: ["400", "700"],
 });
+
+const gowunDodum = Gowun_Dodum({ variable: "--font-gowun-dodum", subsets: ["latin"], weight: "400" });
+const gowunBatang = Gowun_Batang({ variable: "--font-gowun-batang", subsets: ["latin"], weight: "400" });
+const jua = Jua({ variable: "--font-jua", subsets: ["latin"], weight: "400" });
+const nanumPen = Nanum_Pen_Script({ variable: "--font-nanum-pen", subsets: ["latin"], weight: "400" });
 
 export const metadata: Metadata = {
   title: {
@@ -38,7 +43,7 @@ export default async function RootLayout({
   const { t } = await getLang();
 
   return (
-    <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} h-full antialiased`}>
+    <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} ${gowunDodum.variable} ${gowunBatang.variable} ${jua.variable} ${nanumPen.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <Header />
         <main className="flex-1">{children}</main>
