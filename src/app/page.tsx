@@ -11,7 +11,7 @@ function extractYoutubeId(url: string): string {
 
 export default async function HomePage() {
   const supabase = await createClient();
-  const { churchInfo, worshipTimes } = await getSettings();
+  const { churchInfo, snsLinks } = await getSettings();
 
   const [{ data: latestSermon }, { data: latestBulletin }, { data: news }, { data: events }] =
     await Promise.all([
@@ -88,6 +88,49 @@ export default async function HomePage() {
       {/* Intro */}
       <section className="bg-white">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center">
+          <div className="mb-10 flex flex-wrap justify-center gap-3">
+            {snsLinks.youtube && (
+              <a
+                href={snsLinks.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-full bg-[#FF0000] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-105"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z" />
+                </svg>
+                유튜브
+              </a>
+            )}
+            {snsLinks.instagram && (
+              <a
+                href={snsLinks.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-transform hover:scale-105"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="2" width="20" height="20" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+                인스타그램
+              </a>
+            )}
+            {snsLinks.kakao && (
+              <a
+                href={snsLinks.kakao}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 rounded-full bg-[#FEE500] px-5 py-2.5 text-sm font-bold text-[#191919] shadow-sm transition-transform hover:scale-105"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 3C6.5 3 2 6.5 2 10.8c0 2.8 1.9 5.2 4.7 6.6l-1 3.6c-.1.3.3.6.6.4l4.3-2.9c.5.1.9.1 1.4.1 5.5 0 10-3.5 10-7.8S17.5 3 12 3z" />
+                </svg>
+                오픈카톡
+              </a>
+            )}
+          </div>
           <p className="text-sm font-semibold tracking-widest text-spring-500">
             2026년 &lsquo;{churchInfo.motto_2026}&rsquo;
           </p>
@@ -96,23 +139,6 @@ export default async function HomePage() {
               "사막의 오아시스처럼 지친 영혼에게 쉼과 생명을 공급하는 맑은샘교회입니다."}
           </p>
           <p className="mt-4 text-sm text-ink-faint">{churchInfo.motto_verse}</p>
-        </div>
-      </section>
-
-      {/* Worship times */}
-      <section className="mx-auto max-w-6xl px-4 pb-14">
-        <h2 className="text-center text-2xl font-bold text-spring-950">예배 시간</h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {worshipTimes.map((w) => (
-            <div
-              key={w.name}
-              className="rounded-2xl border border-spring-100 bg-white p-6 text-center shadow-sm"
-            >
-              <p className="font-bold text-spring-700">{w.name}</p>
-              <p className="mt-2 text-lg font-semibold text-ink">{w.time}</p>
-              <p className="mt-1 text-sm text-ink-faint">{w.place}</p>
-            </div>
-          ))}
         </div>
       </section>
 

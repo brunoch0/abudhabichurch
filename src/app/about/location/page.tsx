@@ -12,6 +12,13 @@ export const revalidate = 300;
 
 export default async function LocationPage() {
   const { churchInfo } = await getSettings();
+  const supabase = await (await import("@/lib/supabase/server")).createClient();
+  const { data: page } = await supabase
+    .from("pages")
+    .select("content")
+    .eq("slug", "location")
+    .maybeSingle();
+  const loc = (page?.content as { directions?: string; placeholder?: boolean }) ?? {};
   const address = "St Andrew's Centre, Al Mushrif, Abu Dhabi";
 
   return (
@@ -46,6 +53,12 @@ export default async function LocationPage() {
           </div>
         </div>
 
+        {!loc.placeholder && loc.directions && (
+          <div className="mt-6 rounded-2xl border border-spring-100 bg-white p-6 shadow-sm">
+            <p className="font-bold text-ink">🧭 상세 안내</p>
+            <p className="mt-2 whitespace-pre-wrap text-sm text-ink-soft">{loc.directions}</p>
+          </div>
+        )}
         <div className="mt-6 rounded-2xl bg-spring-50 p-6">
           <p className="font-bold text-spring-800">🕐 주일예배 오시는 팁</p>
           <p className="mt-2 text-sm text-ink-soft">

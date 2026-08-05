@@ -13,13 +13,14 @@ export const revalidate = 300;
 export default async function AboutPage() {
   const { churchInfo } = await getSettings();
   const supabase = await createClient();
-  const { data: greeting } = await supabase
+  const { data: pageRows } = await supabase
     .from("pages")
-    .select("content")
-    .eq("slug", "greeting")
-    .maybeSingle();
+    .select("slug, content")
+    .in("slug", ["greeting", "vision"]);
 
-  const greetingBody = (greeting?.content as { body?: string; placeholder?: boolean }) ?? {};
+  const pageMap = new Map(pageRows?.map((r) => [r.slug, r.content]) ?? []);
+  const greetingBody = (pageMap.get("greeting") as { body?: string; placeholder?: boolean }) ?? {};
+  const visionBody = (pageMap.get("vision") as { body?: string; placeholder?: boolean }) ?? {};
 
   return (
     <div>
@@ -61,6 +62,11 @@ export default async function AboutPage() {
             </p>
             <p className="mt-4 text-sm text-ink-faint">{churchInfo.motto_verse}</p>
           </div>
+          {!visionBody.placeholder && visionBody.body && (
+            <div className="mt-6 rounded-2xl border border-spring-100 bg-white p-8 shadow-sm">
+              <p className="whitespace-pre-wrap text-ink-soft">{visionBody.body}</p>
+            </div>
+          )}
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border border-spring-100 bg-white p-6 text-center shadow-sm">
               <p className="text-3xl">🙏</p>
