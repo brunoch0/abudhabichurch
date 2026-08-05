@@ -21,6 +21,7 @@ export default function AdminPages() {
   const [contents, setContents] = useState<Record<string, Content>>({});
   const [active, setActive] = useState(PAGE_FIELDS[0].slug);
   const [busy, setBusy] = useState(false);
+  const [editLang, setEditLang] = useState<"ko" | "en">("ko");
 
   useEffect(() => {
     createClient()
@@ -54,6 +55,7 @@ export default function AdminPages() {
 
   return (
     <div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
       <div className="flex flex-wrap gap-1.5">
         {PAGE_FIELDS.map((p) => (
           <button
@@ -67,26 +69,41 @@ export default function AdminPages() {
           </button>
         ))}
       </div>
+      <div className="flex gap-1">
+        {(["ko", "en"] as const).map((l) => (
+          <button
+            key={l}
+            onClick={() => setEditLang(l)}
+            className={`rounded-full px-3.5 py-1 text-xs font-bold ${editLang === l ? "bg-spring-600 text-white" : "bg-spring-50 text-ink-soft"}`}
+          >
+            {l === "ko" ? "한국어" : "English"}
+          </button>
+        ))}
+      </div>
+      </div>
 
       <div className="mt-5 grid gap-6 lg:grid-cols-2">
         {/* editor */}
         <div className="space-y-5 rounded-2xl border border-spring-100 bg-white p-5">
-          {page.fields.map((f) => (
-            <div key={f.key}>
-              <Field label={f.label}>
-                <textarea
-                  rows={f.rows}
-                  className={inputCls}
-                  value={String(content[f.key] ?? "")}
-                  onChange={(e) => setField(f.key, e.target.value)}
+          {page.fields.map((f) => {
+            const k = editLang === "en" && page.slug !== "en" ? `${f.key}_en` : f.key;
+            return (
+              <div key={k}>
+                <Field label={editLang === "en" && page.slug !== "en" ? `${f.label} (영어 모드용)` : f.label}>
+                  <textarea
+                    rows={f.rows}
+                    className={inputCls}
+                    value={String(content[k] ?? "")}
+                    onChange={(e) => setField(k, e.target.value)}
+                  />
+                </Field>
+                <StyleControls
+                  style={(content[`${k}_style`] as TextStyle) ?? {}}
+                  onChange={(s) => setField(`${k}_style`, s)}
                 />
-              </Field>
-              <StyleControls
-                style={(content[`${f.key}_style`] as TextStyle) ?? {}}
-                onChange={(s) => setField(`${f.key}_style`, s)}
-              />
-            </div>
-          ))}
+              </div>
+            );
+          })}
           <button className={btnCls} disabled={busy} onClick={save}>
             {busy ? "저장 중..." : "저장 (사이트 반영)"}
           </button>
@@ -98,11 +115,14 @@ export default function AdminPages() {
           <div className="rounded-2xl border border-spring-100 bg-mist p-6">
             <div className="rounded-2xl bg-white p-8 shadow-sm">
               <h2 className="mb-4 text-2xl font-bold text-spring-950">{page.label}</h2>
-              {page.fields.map((f) => (
-                <p key={f.key} style={textStyleToCss(content[`${f.key}_style`] as TextStyle)}>
-                  {String(content[f.key] ?? "") || "(내용을 입력하면 여기에 표시됩니다)"}
-                </p>
-              ))}
+              {page.fields.map((f) => {
+                const k = editLang === "en" && page.slug !== "en" ? `${f.key}_en` : f.key;
+                return (
+                  <p key={k} style={textStyleToCss(content[`${k}_style`] as TextStyle)}>
+                    {String(content[k] ?? "") || "(내용을 입력하면 여기에 표시됩니다)"}
+                  </p>
+                );
+              })}
             </div>
           </div>
         </div>

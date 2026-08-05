@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR, Noto_Serif_KR, Gowun_Dodum, Gowun_Batang, Jua, Nanum_Pen_Script } from "next/font/google";
+import {
+  Noto_Sans_KR, Noto_Serif_KR, Gowun_Dodum, Gowun_Batang, Jua, Nanum_Pen_Script,
+  Do_Hyeon, Song_Myung, Gaegu, Hi_Melody,
+  Inter, Playfair_Display, Merriweather, Lora, Montserrat, Poppins, Oswald, Dancing_Script, Caveat, EB_Garamond,
+} from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -19,10 +23,30 @@ const notoSerifKr = Noto_Serif_KR({
   weight: ["400", "700"],
 });
 
-const gowunDodum = Gowun_Dodum({ variable: "--font-gowun-dodum", subsets: ["latin"], weight: "400" });
-const gowunBatang = Gowun_Batang({ variable: "--font-gowun-batang", subsets: ["latin"], weight: "400" });
-const jua = Jua({ variable: "--font-jua", subsets: ["latin"], weight: "400" });
-const nanumPen = Nanum_Pen_Script({ variable: "--font-nanum-pen", subsets: ["latin"], weight: "400" });
+// optional fonts load their files only when actually used on a page (preload off)
+const gowunDodum = Gowun_Dodum({ variable: "--font-gowun-dodum", subsets: ["latin"], weight: "400", preload: false });
+const gowunBatang = Gowun_Batang({ variable: "--font-gowun-batang", subsets: ["latin"], weight: "400", preload: false });
+const jua = Jua({ variable: "--font-jua", subsets: ["latin"], weight: "400", preload: false });
+const nanumPen = Nanum_Pen_Script({ variable: "--font-nanum-pen", subsets: ["latin"], weight: "400", preload: false });
+const doHyeon = Do_Hyeon({ variable: "--font-do-hyeon", weight: "400" });
+const songMyung = Song_Myung({ variable: "--font-song-myung", weight: "400" });
+const gaegu = Gaegu({ variable: "--font-gaegu", weight: "400" });
+const hiMelody = Hi_Melody({ variable: "--font-hi-melody", weight: "400" });
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"], preload: false });
+const playfair = Playfair_Display({ variable: "--font-playfair", subsets: ["latin"], preload: false });
+const merriweather = Merriweather({ variable: "--font-merriweather", subsets: ["latin"], weight: ["400", "700"], preload: false });
+const lora = Lora({ variable: "--font-lora", subsets: ["latin"], preload: false });
+const montserrat = Montserrat({ variable: "--font-montserrat", subsets: ["latin"], preload: false });
+const poppins = Poppins({ variable: "--font-poppins", subsets: ["latin"], weight: ["400", "700"], preload: false });
+const oswald = Oswald({ variable: "--font-oswald", subsets: ["latin"], preload: false });
+const dancing = Dancing_Script({ variable: "--font-dancing", subsets: ["latin"], preload: false });
+const caveat = Caveat({ variable: "--font-caveat", subsets: ["latin"], preload: false });
+const garamond = EB_Garamond({ variable: "--font-garamond", subsets: ["latin"], preload: false });
+
+const FONT_VARS = [
+  gowunDodum, gowunBatang, jua, nanumPen, doHyeon, songMyung, gaegu, hiMelody,
+  inter, playfair, merriweather, lora, montserrat, poppins, oswald, dancing, caveat, garamond,
+].map((f) => f.variable).join(" ");
 
 export const metadata: Metadata = {
   title: {
@@ -43,7 +67,7 @@ export default async function RootLayout({
   const { t } = await getLang();
 
   return (
-    <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} ${gowunDodum.variable} ${gowunBatang.variable} ${jua.variable} ${nanumPen.variable} h-full antialiased`}>
+    <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} ${FONT_VARS} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <Header />
         <main className="flex-1">{children}</main>

@@ -22,6 +22,7 @@ export default function AdminSettings() {
   const [worship, setWorship] = useState<WorshipTime[]>([]);
   const [sns, setSns] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
+  const [editLang, setEditLang] = useState<"ko" | "en">("ko");
 
   useEffect(() => {
     createClient()
@@ -66,24 +67,44 @@ export default function AdminSettings() {
   return (
     <div className="max-w-3xl space-y-6">
       <div className="rounded-2xl border border-spring-100 bg-white p-5">
-        <h2 className="text-sm font-bold text-ink">홈 화면 문구</h2>
-        <p className="mt-1 text-xs text-ink-faint">각 문구 아래에서 글씨체·크기·색상 등을 조절하면 미리보기에 바로 반영됩니다.</p>
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-bold text-ink">홈 화면 문구</h2>
+          <div className="flex gap-1">
+            {(["ko", "en"] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => setEditLang(l)}
+                className={`rounded-full px-3.5 py-1 text-xs font-bold ${editLang === l ? "bg-spring-600 text-white" : "bg-spring-50 text-ink-soft"}`}
+              >
+                {l === "ko" ? "한국어" : "English"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <p className="mt-1 text-xs text-ink-faint">
+          {editLang === "ko"
+            ? "각 문구 아래에서 글씨체·크기·색상 등을 조절하면 미리보기에 바로 반영됩니다."
+            : "영어(EN) 모드에서 보이는 문구와 스타일입니다. 비워두면 기본 영어 문구가 사용됩니다."}
+        </p>
         <div className="mt-3 space-y-5">
-          {HOME_TEXT_FIELDS.map((f) => (
-            <div key={f.key}>
-              {text(f.key, f.label, f.rows)}
-              <StyleControls
-                base={f.base}
-                style={(church[`${f.key}_style`] as TextStyle) ?? {}}
-                onChange={(st) => setChurch({ ...church, [`${f.key}_style`]: st })}
-              />
-              <div className={`mt-2 rounded-xl p-4 ${f.dark ? "bg-spring-950" : "bg-mist"}`}>
-                <p style={textStyleToCss({ ...f.base, ...((church[`${f.key}_style`] as TextStyle) ?? {}) })}>
-                  {String(church[f.key] ?? "") || "(문구를 입력하세요)"}
-                </p>
+          {HOME_TEXT_FIELDS.map((f) => {
+            const k = editLang === "en" ? `${f.key}_en` : f.key;
+            return (
+              <div key={k}>
+                {text(k, f.label, f.rows)}
+                <StyleControls
+                  base={f.base}
+                  style={(church[`${k}_style`] as TextStyle) ?? {}}
+                  onChange={(st) => setChurch({ ...church, [`${k}_style`]: st })}
+                />
+                <div className={`mt-2 rounded-xl p-4 ${f.dark ? "bg-spring-950" : "bg-mist"}`}>
+                  <p style={textStyleToCss({ ...f.base, ...((church[`${k}_style`] as TextStyle) ?? {}) })}>
+                    {String(church[k] ?? "") || (editLang === "ko" ? "(문구를 입력하세요)" : "(비워두면 기본 영어 문구 사용)")}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

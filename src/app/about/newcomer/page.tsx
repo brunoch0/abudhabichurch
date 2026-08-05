@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import { getSettings } from "@/lib/settings";
 import { createClient } from "@/lib/supabase/server";
+import { getLang } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
   title: "새가족 안내",
@@ -37,8 +38,10 @@ const STEPS = [
 export default async function NewcomerPage() {
   const { churchInfo } = await getSettings();
   const supabase = await createClient();
+  const { lang } = await getLang();
   const { data: page } = await supabase.from("pages").select("content").eq("slug", "newcomer").maybeSingle();
-  const welcome = (page?.content as { body?: string })?.body;
+  const nc = (page?.content as Record<string, unknown>) ?? {};
+  const welcome = (lang === "en" && nc.body_en ? nc.body_en : nc.body) as string | undefined;
 
   return (
     <div>

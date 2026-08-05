@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import { getSettings } from "@/lib/settings";
 import { textStyleToCss, type TextStyle } from "@/lib/textstyle";
+import { getLang } from "@/lib/i18n-server";
 import CopyAddressButton from "./CopyAddressButton";
 
 export const metadata: Metadata = {
@@ -13,13 +14,20 @@ export const revalidate = 300;
 
 export default async function LocationPage() {
   const { churchInfo } = await getSettings();
+  const { lang } = await getLang();
   const supabase = await (await import("@/lib/supabase/server")).createClient();
   const { data: page } = await supabase
     .from("pages")
     .select("content")
     .eq("slug", "location")
     .maybeSingle();
-  const loc = (page?.content as { directions?: string; directions_style?: TextStyle; placeholder?: boolean }) ?? {};
+  const rawLoc = (page?.content as Record<string, unknown> & { placeholder?: boolean }) ?? {};
+  const dirKey = lang === "en" && rawLoc.directions_en ? "directions_en" : "directions";
+  const loc = {
+    placeholder: rawLoc.placeholder,
+    directions: rawLoc[dirKey] as string | undefined,
+    directions_style: rawLoc[`${dirKey}_style`] as TextStyle | undefined,
+  };
   const address = "St Andrew's Centre, Al Mushrif, Abu Dhabi";
 
   return (

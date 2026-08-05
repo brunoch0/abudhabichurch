@@ -1,7 +1,7 @@
 "use client";
 
 import { inputCls } from "@/components/admin/ui";
-import { DEFAULT_STYLE, type TextStyle } from "@/lib/textstyle";
+import { DEFAULT_STYLE, FONT_OPTIONS, type TextStyle } from "@/lib/textstyle";
 
 export default function StyleControls({
   style,
@@ -18,13 +18,14 @@ export default function StyleControls({
     <div className="mt-2 grid grid-cols-2 gap-2 rounded-xl bg-spring-50/60 p-3 sm:grid-cols-3">
       <label className="block text-[11px] font-semibold text-ink-soft">
         글씨체
-        <select className={`${inputCls} mt-1`} value={s.font} onChange={(e) => onChange({ ...s, font: e.target.value as TextStyle["font"] })}>
-          <option value="sans">고딕 (기본)</option>
-          <option value="serif">명조</option>
-          <option value="gowun">고운돋움 (부드러운 고딕)</option>
-          <option value="batang">고운바탕 (부드러운 명조)</option>
-          <option value="jua">주아 (둥근 제목체)</option>
-          <option value="pen">나눔손글씨 (펜글씨)</option>
+        <select className={`${inputCls} mt-1`} value={s.font} onChange={(e) => onChange({ ...s, font: e.target.value })}>
+          {(["국문", "영문"] as const).map((group) => (
+            <optgroup key={group} label={group}>
+              {FONT_OPTIONS.filter((f) => f.group === group).map((f) => (
+                <option key={f.key} value={f.key}>{f.label}</option>
+              ))}
+            </optgroup>
+          ))}
         </select>
       </label>
       <label className="block text-[11px] font-semibold text-ink-soft">

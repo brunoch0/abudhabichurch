@@ -3,6 +3,7 @@ import PageHero from "@/components/PageHero";
 import { getSettings } from "@/lib/settings";
 import { createClient } from "@/lib/supabase/server";
 import { textStyleToCss, type TextStyle } from "@/lib/textstyle";
+import { getLang } from "@/lib/i18n-server";
 
 export const metadata: Metadata = {
   title: "교회소개",
@@ -13,6 +14,7 @@ export const revalidate = 300;
 
 export default async function AboutPage() {
   const { churchInfo } = await getSettings();
+  const { lang } = await getLang();
   const supabase = await createClient();
   const { data: pageRows } = await supabase
     .from("pages")
@@ -20,8 +22,13 @@ export default async function AboutPage() {
     .in("slug", ["greeting", "vision"]);
 
   const pageMap = new Map(pageRows?.map((r) => [r.slug, r.content]) ?? []);
-  const greetingBody = (pageMap.get("greeting") as { body?: string; body_style?: TextStyle; placeholder?: boolean }) ?? {};
-  const visionBody = (pageMap.get("vision") as { body?: string; body_style?: TextStyle; placeholder?: boolean }) ?? {};
+  type PageContent = Record<string, unknown> & { placeholder?: boolean };
+  const withLang = (c: PageContent, key: string) => {
+    const k = lang === "en" && c[`${key}_en`] ? `${key}_en` : key;
+    return { body: c[k] as string | undefined, style: c[`${k}_style`] as TextStyle | undefined, placeholder: c.placeholder };
+  };
+  const greetingBody = withLang((pageMap.get("greeting") as PageContent) ?? {}, "body");
+  const visionBody = withLang((pageMap.get("vision") as PageContent) ?? {}, "body");
 
   return (
     <div>
@@ -49,7 +56,7 @@ export default async function AboutPage() {
               </p>
             </div>
           ) : (
-            <div style={textStyleToCss(greetingBody.body_style)}>{greetingBody.body}</div>
+            <div style={textStyleToCss(greetingBody.style)}>{greetingBody.body}</div>
           )}
         </div>
       </section>
@@ -65,7 +72,7 @@ export default async function AboutPage() {
           </div>
           {!visionBody.placeholder && visionBody.body && (
             <div className="mt-6 rounded-2xl border border-spring-100 bg-white p-8 shadow-sm">
-              <p style={textStyleToCss(visionBody.body_style)}>{visionBody.body}</p>
+              <p style={textStyleToCss(visionBody.style)}>{visionBody.body}</p>
             </div>
           )}
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
