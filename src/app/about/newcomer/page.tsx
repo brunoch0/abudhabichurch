@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import { getSettings } from "@/lib/settings";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "새가족 안내",
@@ -35,12 +36,15 @@ const STEPS = [
 
 export default async function NewcomerPage() {
   const { churchInfo } = await getSettings();
+  const supabase = await createClient();
+  const { data: page } = await supabase.from("pages").select("content").eq("slug", "newcomer").maybeSingle();
+  const welcome = (page?.content as { body?: string })?.body;
 
   return (
     <div>
       <PageHero
         title="새가족 안내"
-        subtitle="맑은샘 교회를 찾아주신 새가족 여러분을 진심으로 환영합니다"
+        subtitle={welcome || "맑은샘 교회를 찾아주신 새가족 여러분을 진심으로 환영합니다"}
       />
 
       <section className="mx-auto max-w-4xl px-4 py-14">

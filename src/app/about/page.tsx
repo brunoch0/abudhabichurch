@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import { getSettings } from "@/lib/settings";
 import { createClient } from "@/lib/supabase/server";
+import { textStyleToCss, type TextStyle } from "@/lib/textstyle";
 
 export const metadata: Metadata = {
   title: "교회소개",
@@ -19,8 +20,8 @@ export default async function AboutPage() {
     .in("slug", ["greeting", "vision"]);
 
   const pageMap = new Map(pageRows?.map((r) => [r.slug, r.content]) ?? []);
-  const greetingBody = (pageMap.get("greeting") as { body?: string; placeholder?: boolean }) ?? {};
-  const visionBody = (pageMap.get("vision") as { body?: string; placeholder?: boolean }) ?? {};
+  const greetingBody = (pageMap.get("greeting") as { body?: string; body_style?: TextStyle; placeholder?: boolean }) ?? {};
+  const visionBody = (pageMap.get("vision") as { body?: string; body_style?: TextStyle; placeholder?: boolean }) ?? {};
 
   return (
     <div>
@@ -48,7 +49,7 @@ export default async function AboutPage() {
               </p>
             </div>
           ) : (
-            <div className="whitespace-pre-wrap text-ink-soft">{greetingBody.body}</div>
+            <div style={textStyleToCss(greetingBody.body_style)}>{greetingBody.body}</div>
           )}
         </div>
       </section>
@@ -64,7 +65,7 @@ export default async function AboutPage() {
           </div>
           {!visionBody.placeholder && visionBody.body && (
             <div className="mt-6 rounded-2xl border border-spring-100 bg-white p-8 shadow-sm">
-              <p className="whitespace-pre-wrap text-ink-soft">{visionBody.body}</p>
+              <p style={textStyleToCss(visionBody.body_style)}>{visionBody.body}</p>
             </div>
           )}
           <div className="mt-6 grid gap-4 sm:grid-cols-3">

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getSettings } from "@/lib/settings";
+import { createClient } from "@/lib/supabase/server";
+import { textStyleToCss, type TextStyle } from "@/lib/textstyle";
 
 export const metadata: Metadata = {
   title: "English | Korean Methodist Church of Abu Dhabi",
@@ -12,6 +14,9 @@ export const revalidate = 300;
 
 export default async function EnglishPage() {
   const { churchInfo, worshipTimes } = await getSettings();
+  const supabase = await createClient();
+  const { data: enPage } = await supabase.from("pages").select("content").eq("slug", "en").maybeSingle();
+  const en = (enPage?.content as { body?: string; body_style?: TextStyle; placeholder?: boolean }) ?? {};
 
   return (
     <div>
@@ -23,9 +28,10 @@ export default async function EnglishPage() {
           <h1 className="mt-4 text-3xl font-black tracking-tight text-spring-950 md:text-4xl">
             Welcome to Our Church
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-ink-soft">
-            We are a Korean-speaking Methodist church community in Abu Dhabi, UAE. Everyone is
-            welcome to join us for worship.
+          <p className="mx-auto mt-4 max-w-xl" style={en.placeholder === false && en.body ? textStyleToCss(en.body_style) : undefined}>
+            {en.placeholder === false && en.body
+              ? en.body
+              : "We are a Korean-speaking Methodist church community in Abu Dhabi, UAE. Everyone is welcome to join us for worship."}
           </p>
         </div>
       </section>

@@ -16,6 +16,7 @@ const MENU = [
   { href: "/admin/banners", label: "배너" },
   { href: "/admin/pages", label: "페이지 문구" },
   { href: "/admin/settings", label: "사이트 설정" },
+  { href: "/admin/account", label: "내 계정" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

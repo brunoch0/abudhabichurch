@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import { getSettings } from "@/lib/settings";
+import { textStyleToCss, type TextStyle } from "@/lib/textstyle";
 import CopyAddressButton from "./CopyAddressButton";
 
 export const metadata: Metadata = {
@@ -18,7 +19,7 @@ export default async function LocationPage() {
     .select("content")
     .eq("slug", "location")
     .maybeSingle();
-  const loc = (page?.content as { directions?: string; placeholder?: boolean }) ?? {};
+  const loc = (page?.content as { directions?: string; directions_style?: TextStyle; placeholder?: boolean }) ?? {};
   const address = "St Andrew's Centre, Al Mushrif, Abu Dhabi";
 
   return (
@@ -56,7 +57,7 @@ export default async function LocationPage() {
         {!loc.placeholder && loc.directions && (
           <div className="mt-6 rounded-2xl border border-spring-100 bg-white p-6 shadow-sm">
             <p className="font-bold text-ink">🧭 상세 안내</p>
-            <p className="mt-2 whitespace-pre-wrap text-sm text-ink-soft">{loc.directions}</p>
+            <p className="mt-2" style={textStyleToCss(loc.directions_style)}>{loc.directions}</p>
           </div>
         )}
         <div className="mt-6 rounded-2xl bg-spring-50 p-6">
