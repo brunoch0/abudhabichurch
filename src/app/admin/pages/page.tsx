@@ -69,8 +69,9 @@ export default function AdminPages() {
   }, []);
 
   const page = PAGE_FIELDS.find((p) => p.slug === active)!;
+  const list = page.list;
   const content = contents[active] ?? {};
-  const listRows = (page.list ? ((content[page.list.key] as ListRow[]) ?? []) : []) as ListRow[];
+  const listRows = (list ? ((content[list.key] as ListRow[]) ?? []) : []) as ListRow[];
 
   const setField = (key: string, value: unknown) =>
     setContents((c) => ({ ...c, [active]: { ...c[active], [key]: value } }));
@@ -143,9 +144,9 @@ export default function AdminPages() {
           })}
 
           {/* list section (cards / steps) — shared across languages */}
-          {page.list && editLang === "ko" && (
+          {list && editLang === "ko" && (
             <div className="border-t border-spring-50 pt-4">
-              <p className="mb-2 text-xs font-semibold text-ink-soft">{page.list.label}</p>
+              <p className="mb-2 text-xs font-semibold text-ink-soft">{list.label}</p>
               <div className="space-y-3">
                 {listRows.map((row, i) => (
                   <div key={i} className="rounded-xl border border-spring-100 p-3">
@@ -158,7 +159,7 @@ export default function AdminPages() {
                             onClick={() => {
                               const next = [...listRows];
                               [next[i - 1], next[i]] = [next[i], next[i - 1]];
-                              setField(page.list!.key, next);
+                              setField(list.key, next);
                             }}
                           >
                             ▲ 위로
@@ -166,14 +167,14 @@ export default function AdminPages() {
                         )}
                         <button
                           className="text-xs text-red-400 hover:text-red-600"
-                          onClick={() => setField(page.list!.key, listRows.filter((_, j) => j !== i))}
+                          onClick={() => setField(list.key, listRows.filter((_, j) => j !== i))}
                         >
                           삭제
                         </button>
                       </div>
                     </div>
                     <div className="mt-2 space-y-2">
-                      {page.list.item.map((it) =>
+                      {list.item.map((it) =>
                         it.textarea ? (
                           <textarea
                             key={it.key}
@@ -182,7 +183,7 @@ export default function AdminPages() {
                             placeholder={it.label}
                             value={row[it.key] ?? ""}
                             onChange={(e) =>
-                              setField(page.list!.key, listRows.map((r, j) => (j === i ? { ...r, [it.key]: e.target.value } : r)))
+                              setField(list.key, listRows.map((r, j) => (j === i ? { ...r, [it.key]: e.target.value } : r)))
                             }
                           />
                         ) : (
@@ -192,7 +193,7 @@ export default function AdminPages() {
                             placeholder={it.label}
                             value={row[it.key] ?? ""}
                             onChange={(e) =>
-                              setField(page.list!.key, listRows.map((r, j) => (j === i ? { ...r, [it.key]: e.target.value } : r)))
+                              setField(list.key, listRows.map((r, j) => (j === i ? { ...r, [it.key]: e.target.value } : r)))
                             }
                           />
                         )
@@ -202,7 +203,7 @@ export default function AdminPages() {
                 ))}
                 <button
                   className={btnGhostCls}
-                  onClick={() => setField(page.list!.key, [...listRows, Object.fromEntries(page.list!.item.map((it) => [it.key, ""]))])}
+                  onClick={() => setField(list.key, [...listRows, Object.fromEntries(list.item.map((it) => [it.key, ""]))])}
                 >
                   + 항목 추가
                 </button>
@@ -234,7 +235,7 @@ export default function AdminPages() {
                   </p>
                 );
               })}
-              {page.list && listRows.length > 0 && (
+              {list && listRows.length > 0 && (
                 <div className="mt-5 space-y-3">
                   {listRows.map((row, i) => (
                     <div key={i} className="rounded-xl border border-spring-100 p-4">
