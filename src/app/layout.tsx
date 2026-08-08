@@ -49,6 +49,7 @@ const FONT_VARS = [
 ].map((f) => f.variable).join(" ");
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://adkmc.ae"),
   title: {
     default: "아부다비 맑은샘 한인교회",
     template: "%s | 아부다비 맑은샘 한인교회",

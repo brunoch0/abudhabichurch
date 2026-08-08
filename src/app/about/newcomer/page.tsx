@@ -42,6 +42,11 @@ export default async function NewcomerPage() {
   const { data: page } = await supabase.from("pages").select("content").eq("slug", "newcomer").maybeSingle();
   const nc = (page?.content as Record<string, unknown>) ?? {};
   const welcome = (lang === "en" && nc.body_en ? nc.body_en : nc.body) as string | undefined;
+  const rawSteps = nc.steps as { title?: string; desc?: string }[] | undefined;
+  const steps =
+    rawSteps && rawSteps.length > 0
+      ? rawSteps.map((s, i) => ({ step: String(i + 1), title: s.title ?? "", desc: s.desc ?? "" }))
+      : STEPS;
 
   return (
     <div>
@@ -52,7 +57,7 @@ export default async function NewcomerPage() {
 
       <section className="mx-auto max-w-4xl px-4 py-14">
         <div className="space-y-4">
-          {STEPS.map((s) => (
+          {steps.map((s) => (
             <div
               key={s.step}
               className="flex gap-5 rounded-2xl border border-spring-100 bg-white p-6 shadow-sm"

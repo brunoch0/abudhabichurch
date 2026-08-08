@@ -28,7 +28,15 @@ export default async function AboutPage() {
     return { body: c[k] as string | undefined, style: c[`${k}_style`] as TextStyle | undefined, placeholder: c.placeholder };
   };
   const greetingBody = withLang((pageMap.get("greeting") as PageContent) ?? {}, "body");
-  const visionBody = withLang((pageMap.get("vision") as PageContent) ?? {}, "body");
+  const visionContent = (pageMap.get("vision") as PageContent) ?? {};
+  const visionBody = withLang(visionContent, "body");
+  const DEFAULT_CARDS = [
+    { emoji: "🙏", title: "예배하는 교회", desc: "하나님 앞에 드리는 거룩한 예배" },
+    { emoji: "🤝", title: "동행하는 교회", desc: "타향살이를 함께 걷는 공동체" },
+    { emoji: "🌱", title: "다음세대를 세우는 교회", desc: "자녀들의 믿음의 뿌리" },
+  ];
+  const rawCards = visionContent.cards as { emoji?: string; title?: string; desc?: string }[] | undefined;
+  const cards = rawCards && rawCards.length > 0 ? rawCards : DEFAULT_CARDS;
 
   return (
     <div>
@@ -76,25 +84,19 @@ export default async function AboutPage() {
             </div>
           )}
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-spring-100 bg-white p-6 text-center shadow-sm">
-              <p className="text-3xl">🙏</p>
-              <p className="mt-2 font-bold text-ink">예배하는 교회</p>
-              <p className="mt-1 text-sm text-ink-faint">하나님 앞에 드리는 거룩한 예배</p>
-            </div>
-            <div className="rounded-2xl border border-spring-100 bg-white p-6 text-center shadow-sm">
-              <p className="text-3xl">🤝</p>
-              <p className="mt-2 font-bold text-ink">동행하는 교회</p>
-              <p className="mt-1 text-sm text-ink-faint">타향살이를 함께 걷는 공동체</p>
-            </div>
-            <div className="rounded-2xl border border-spring-100 bg-white p-6 text-center shadow-sm">
-              <p className="text-3xl">🌱</p>
-              <p className="mt-2 font-bold text-ink">다음세대를 세우는 교회</p>
-              <p className="mt-1 text-sm text-ink-faint">자녀들의 믿음의 뿌리</p>
-            </div>
+            {cards.map((c, i) => (
+              <div key={i} className="rounded-2xl border border-spring-100 bg-white p-6 text-center shadow-sm">
+                {c.emoji && <p className="text-3xl">{c.emoji}</p>}
+                <p className="mt-2 font-bold text-ink">{c.title}</p>
+                {c.desc && <p className="mt-1 text-sm text-ink-faint">{c.desc}</p>}
+              </div>
+            ))}
           </div>
-          <p className="mt-4 text-center text-xs text-ink-faint">
-            * 인사말·비전 문구는 교회 확정 문구로 교체 예정입니다
-          </p>
+          {greetingBody.placeholder && (
+            <p className="mt-4 text-center text-xs text-ink-faint">
+              * 인사말·비전 문구는 관리자 페이지에서 수정할 수 있습니다
+            </p>
+          )}
         </div>
       </section>
     </div>
