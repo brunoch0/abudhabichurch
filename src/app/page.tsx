@@ -118,9 +118,9 @@ export default async function HomePage() {
                 href={snsLinks.youtube}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="유튜브" className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FF0000] text-white shadow-sm transition-transform hover:scale-110"
+                aria-label="유튜브" className="flex h-[53px] w-[53px] items-center justify-center rounded-full bg-[#FF0000] text-white shadow-sm transition-transform hover:scale-110"
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z" />
                 </svg>
               </a>
@@ -130,9 +130,9 @@ export default async function HomePage() {
                 href={snsLinks.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="인스타그램" className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white shadow-sm transition-transform hover:scale-110"
+                aria-label="인스타그램" className="flex h-[53px] w-[53px] items-center justify-center rounded-full bg-gradient-to-tr from-[#F58529] via-[#DD2A7B] to-[#8134AF] text-white shadow-sm transition-transform hover:scale-110"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="2" y="2" width="20" height="20" rx="5" />
                   <circle cx="12" cy="12" r="4" />
                   <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
@@ -144,10 +144,22 @@ export default async function HomePage() {
                 href={snsLinks.kakao}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="오픈카톡" className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FEE500] text-[#191919] shadow-sm transition-transform hover:scale-110"
+                aria-label="오픈카톡" className="flex h-[53px] w-[53px] items-center justify-center rounded-full bg-[#FEE500] text-[#191919] shadow-sm transition-transform hover:scale-110"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 3C6.5 3 2 6.5 2 10.8c0 2.8 1.9 5.2 4.7 6.6l-1 3.6c-.1.3.3.6.6.4l4.3-2.9c.5.1.9.1 1.4.1 5.5 0 10-3.5 10-7.8S17.5 3 12 3z" />
+                </svg>
+              </a>
+            )}
+            {snsLinks.whatsapp && (
+              <a
+                href={snsLinks.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="왓츠앱" className="flex h-[53px] w-[53px] items-center justify-center rounded-full bg-[#25D366] text-white shadow-sm transition-transform hover:scale-110"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.5-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1.1-1.4-1.1-2.7 0-1.3.7-1.9.9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4-.1.6.5.2.6.8 1.9.8 2 .1.1.1.3 0 .5-.3.6-.7.9-.5 1.2.7 1.2 1.6 2 2.8 2.6.3.2.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.3 1.3z" />
                 </svg>
               </a>
             )}
@@ -264,42 +276,42 @@ export default async function HomePage() {
                 )}
               </div>
             </div>
+
+            <div>
+              <div className="flex items-baseline justify-between">
+                <h2 className="text-2xl font-bold text-spring-950">{t.home.upcoming}</h2>
+                <Link href="/calendar" className="text-sm font-medium text-spring-600 hover:underline">
+                  {t.home.allEvents}
+                </Link>
+              </div>
+              <div className="mt-6 rounded-2xl border border-spring-100 bg-white p-3 shadow-sm">
+                {events && events.length > 0 ? (
+                  events.map((e) => {
+                    const d = new Date(new Date(e.starts_at).getTime() + 4 * 3600 * 1000);
+                    return (
+                      <Link
+                        key={e.id}
+                        href={`/calendar?sel=${e.id}`}
+                        className="flex items-center gap-2 rounded-xl px-3 py-2.5 transition-colors hover:bg-spring-50"
+                      >
+                        <span className="shrink-0 text-sm font-bold text-spring-600">
+                          {d.getUTCMonth() + 1}/{d.getUTCDate()}
+                        </span>
+                        <span className="flex-1 truncate text-sm text-ink">{e.title}</span>
+                      </Link>
+                    );
+                  })
+                ) : (
+                  <p className="px-3 py-2.5 text-sm text-ink-faint">{t.home.noEvents}</p>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Upcoming events */}
-      <section className="mx-auto max-w-6xl px-4 py-14">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-2xl font-bold text-spring-950">{t.home.upcoming}</h2>
-          <Link href="/calendar" className="text-sm font-medium text-spring-600 hover:underline">
-            {t.home.allEvents}
-          </Link>
-        </div>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {events && events.length > 0 ? (
-            events.map((e) => {
-              const d = new Date(e.starts_at);
-              return (
-                <div key={e.id} className="rounded-2xl border border-spring-100 bg-white p-5 shadow-sm">
-                  <p className="text-sm font-bold text-spring-600">
-                    {d.getMonth() + 1}월 {d.getDate()}일
-                  </p>
-                  <p className="mt-1 font-semibold text-ink">{e.title}</p>
-                  {e.location && <p className="mt-1 text-sm text-ink-faint">{e.location}</p>}
-                </div>
-              );
-            })
-          ) : (
-            <p className="text-sm text-ink-faint sm:col-span-2 lg:col-span-4">
-              {t.home.noEvents}
-            </p>
-          )}
-        </div>
-      </section>
-
       {/* Location */}
-      <section className="bg-mist py-14">
+      <section className="bg-white py-14">
         <div className="mx-auto max-w-6xl px-4">
           <h2 className="text-2xl font-bold text-spring-950">{t.home.location}</h2>
           <div className="mt-6 grid gap-6 lg:grid-cols-2">
