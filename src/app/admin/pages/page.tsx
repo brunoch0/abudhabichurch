@@ -45,6 +45,19 @@ const PAGE_FIELDS: PageDef[] = [
     },
   },
   { slug: "location", label: "오시는 길", fields: [{ key: "directions", label: "상세 안내", rows: 4 }] },
+  {
+    slug: "faq",
+    label: "자주 묻는 질문",
+    fields: [],
+    list: {
+      key: "items",
+      label: "질문 목록 (검색·AI 노출에 사용됩니다)",
+      item: [
+        { key: "q", label: "질문", textarea: true },
+        { key: "a", label: "답변", textarea: true },
+      ],
+    },
+  },
   { slug: "en", label: "English", fields: [{ key: "body", label: "영어 소개", rows: 5 }] },
 ];
 

@@ -10,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/about/worship",
     "/about/location",
     "/about/newcomer",
+    "/faq",
     "/en",
     "/sermons",
     "/bulletins",

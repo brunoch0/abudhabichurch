@@ -32,6 +32,7 @@ export default function Header() {
         { label: t.nav.aboutWorship, href: "/about/worship" },
         { label: t.nav.aboutLocation, href: "/about/location" },
         { label: t.nav.aboutNewcomer, href: "/about/newcomer" },
+        { label: t.nav.faq, href: "/faq" },
       ],
     },
     {
