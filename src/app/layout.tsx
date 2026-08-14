@@ -90,6 +90,9 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
+  verification: {
+    google: "BL2tixTXpIvaM1N1lBJW9G2FgWor-8apviS_oP50O3I",
+  },
 };
 
 export default async function RootLayout({
