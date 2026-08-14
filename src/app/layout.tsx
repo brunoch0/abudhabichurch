@@ -10,6 +10,7 @@ import Footer from "@/components/layout/Footer";
 import FloatingContact from "@/components/layout/FloatingContact";
 import { getSettings } from "@/lib/settings";
 import { getLang } from "@/lib/i18n-server";
+import JsonLd from "@/components/JsonLd";
 
 const notoSansKr = Noto_Sans_KR({
   variable: "--font-noto-sans-kr",
@@ -51,12 +52,44 @@ const FONT_VARS = [
 export const metadata: Metadata = {
   metadataBase: new URL("https://adkmc.ae"),
   title: {
-    default: "아부다비 맑은샘 한인교회",
+    default: "아부다비 맑은샘 한인교회 | UAE 아부다비 한인교회",
     template: "%s | 아부다비 맑은샘 한인교회",
   },
   description:
-    "UAE 아부다비 한인교회. 주일예배, 설교 영상, 주보, 교회 일정 안내. 아부다비 이주·파견 한인 가정을 환영합니다.",
-  keywords: ["아부다비 한인교회", "아부다비 교회", "UAE 한인교회", "아랍에미리트 한인교회"],
+    "UAE 아부다비 한인교회입니다. 주일예배 오전 10:20, St.Andrew's Centre 신관 채플실. 설교 영상, 주보, 교회 일정을 안내합니다. 아부다비 이주·파견 한인 가정을 환영합니다.",
+  keywords: [
+    "아부다비 한인교회",
+    "아부다비 교회",
+    "UAE 한인교회",
+    "아랍에미리트 한인교회",
+    "아부다비 맑은샘교회",
+    "두바이 근교 한인교회",
+    "Korean church Abu Dhabi",
+    "ADKMC",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    alternateLocale: "en_US",
+    url: "https://adkmc.ae",
+    siteName: "아부다비 맑은샘 한인교회",
+    title: "아부다비 맑은샘 한인교회 | UAE 아부다비 한인교회",
+    description:
+      "주일예배 오전 10:20, St.Andrew's Centre. 아부다비에 오신 한인 가정을 환영합니다.",
+    images: [{ url: "/hero-standrews.jpg", width: 1280, height: 960, alt: "아부다비 맑은샘 한인교회 예배 장소" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "아부다비 맑은샘 한인교회",
+    description: "UAE 아부다비 한인교회 · 주일예배 오전 10:20",
+    images: ["/hero-standrews.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
 };
 
 export default async function RootLayout({
@@ -64,12 +97,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { churchInfo, snsLinks } = await getSettings();
+  const { churchInfo, snsLinks, worshipTimes } = await getSettings();
   const { t } = await getLang();
 
   return (
     <html lang="ko" className={`${notoSansKr.variable} ${notoSerifKr.variable} ${FONT_VARS} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
+        <JsonLd churchInfo={churchInfo} snsLinks={snsLinks} worshipTimes={worshipTimes} />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer churchInfo={churchInfo} snsLinks={snsLinks} adminLabel={t.common.adminLogin} />
