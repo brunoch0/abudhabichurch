@@ -71,7 +71,7 @@ export default function AdminBanners() {
     <div className="grid gap-8 lg:grid-cols-2">
       <div>
         <h2 className="text-sm font-bold text-ink">{form.id ? "배너 수정" : "새 배너 등록"}</h2>
-        <p className="mt-1 text-xs text-ink-faint">홈 상단 슬라이드에 노출됩니다 (추후 홈 배너 슬라이드 적용 시)</p>
+        <p className="mt-1 text-xs text-ink-faint">홈 화면 맨 위 큰 배경 사진입니다. 등록하면 기존 사진 대신 표시되고, 순서가 가장 앞선 것 하나가 사용됩니다. (권장: 가로로 긴 사진)</p>
         <div className="mt-3 space-y-3 rounded-2xl border border-spring-100 bg-white p-5">
           <Field label="이미지 *">
             <div className="flex items-center gap-3">

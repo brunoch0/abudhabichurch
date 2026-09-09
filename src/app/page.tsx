@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getSettings } from "@/lib/settings";
 import { getLang } from "@/lib/i18n-server";
 import { textStyleToCss, type TextStyle } from "@/lib/textstyle";
+import PopupNotice from "@/components/PopupNotice";
 
 export const revalidate = 300;
 
@@ -48,6 +49,29 @@ export default async function HomePage() {
         .limit(4),
     ]);
 
+  const today = new Date().toISOString().slice(0, 10);
+
+  const [{ data: popupRows }, { data: bannerRows }] = await Promise.all([
+    supabase
+      .from("popups")
+      .select("id, title, image_url, link_url, starts_at, ends_at")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true })
+      .limit(5),
+    supabase
+      .from("banners")
+      .select("image_url, starts_at, ends_at")
+      .eq("is_published", true)
+      .order("sort_order", { ascending: true })
+      .limit(1),
+  ]);
+
+  // date windows are optional — an empty bound means "always"
+  const popups = (popupRows ?? []).filter(
+    (p) => (!p.starts_at || p.starts_at <= today) && (!p.ends_at || p.ends_at >= today)
+  );
+  const heroImage = bannerRows?.[0]?.image_url || "/hero-standrews.jpg";
+
   const youtubeId = latestSermon ? extractYoutubeId(latestSermon.youtube_url) : "";
 
   // per-language text/style lookup: EN mode uses `<key>_en` fields, falling back to defaults
@@ -67,11 +91,13 @@ export default async function HomePage() {
 
   return (
     <div>
+      <PopupNotice popups={popups} />
+
       {/* Hero — full-bleed photo */}
       <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden md:min-h-[80vh]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/hero-standrews.jpg"
+          src={heroImage}
           alt="아부다비 St.Andrew's Centre 전경"
           className="hero-kenburns absolute inset-0 h-full w-full object-cover object-[center_12%]"
         />
