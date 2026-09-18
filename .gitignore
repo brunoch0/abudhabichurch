@@ -44,3 +44,6 @@ next-env.d.ts
 .DS_Store
 .bkit/
 .claude/
+
+# local backups (may contain personal data)
+backups/
