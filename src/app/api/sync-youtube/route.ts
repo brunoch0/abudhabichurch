@@ -16,14 +16,29 @@ function cleanTitle(title: string): string {
 }
 
 export async function GET() {
-  const res = await fetch(
-    `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`,
-    { cache: "no-store" }
-  );
-  if (!res.ok) {
-    return NextResponse.json({ ok: false, error: "rss fetch failed" }, { status: 502 });
+  // This daily cron doubles as the Supabase keepalive: a Free-plan project is
+  // paused after a week without activity, so reach the database before the
+  // YouTube feed, which is the part that can fail.
+  const supabase = await createClient();
+  const { error: pingError } = await supabase.from("sermons").select("id").limit(1);
+  if (pingError) {
+    return NextResponse.json({ ok: false, error: pingError.message }, { status: 500 });
   }
-  const xml = await res.text();
+
+  let xml: string;
+  try {
+    const res = await fetch(
+      `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) throw new Error(`rss fetch failed: ${res.status}`);
+    xml = await res.text();
+  } catch (err) {
+    // The keepalive above already ran, so still surface the sync failure loudly
+    // rather than reporting a healthy cron.
+    const message = err instanceof Error ? err.message : "rss fetch failed";
+    return NextResponse.json({ ok: false, kept_alive: true, error: message }, { status: 502 });
+  }
 
   const entries = [...xml.matchAll(/<entry>([\s\S]*?)<\/entry>/g)]
     .map((m) => {
@@ -42,7 +57,6 @@ export async function GET() {
     })
     .filter(Boolean);
 
-  const supabase = await createClient();
   const { data: inserted, error } = await supabase.rpc("sync_sermons", { entries });
   if (error) {
     return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
